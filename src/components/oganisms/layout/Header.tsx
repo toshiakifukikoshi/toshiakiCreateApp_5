@@ -1,8 +1,21 @@
 import { VFC, memo } from "react";
-import { Box, Flex, Heading, Link, IconButton, Drawer, DrawerOverlay, DrawerContent, DrawerBody } from "@chakra-ui/react";
+import {
+  Button,
+  Box,
+  Flex,
+  Heading,
+  Link,
+  IconButton,
+  Drawer,
+  DrawerOverlay,
+  DrawerContent,
+  DrawerBody,
+  useDisclosure
+} from "@chakra-ui/react";
 import { HamburgerIcon } from "@chakra-ui/icons";
 
 export const Header: VFC = memo(() => {
+  const { isOpen, onOpen, onClose } = useDisclosure();
   return (
     <>
       <Flex
@@ -36,18 +49,19 @@ export const Header: VFC = memo(() => {
           size="sm"
           variant="unstyled"
           display={{ base: "block", md: "none" }}
+          onClick={onOpen}
         />
       </Flex>
-      <Drawer　placement="left" size="xs" onClose={}>
+      <Drawer placement="left" size="xs" onClose={onClose} isOpen={isOpen}>
         <DrawerOverlay>
-<DrawerContent>
-  <DrawerBody>
-    <Button>TOP</Button>
-    <Button>ユーザー一覧</Button>
-    <Button>設定</Button>
-  </DrawerBody>
-</DrawerContent>
-          <DrawerOverlay>
+          <DrawerContent>
+            <DrawerBody p={0} bg="gray.100">
+              <Button w="100%">TOP</Button>
+              <Button w="100%">ユーザー一覧</Button>
+              <Button w="100%">設定</Button>
+            </DrawerBody>
+          </DrawerContent>
+        </DrawerOverlay>
       </Drawer>
     </>
   );
