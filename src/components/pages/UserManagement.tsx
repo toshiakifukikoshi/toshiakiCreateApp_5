@@ -1,22 +1,49 @@
-import { VFC, memo } from "react";
-import { Box, Wrap, WrapItem, Stack, Image } from "@chakra-ui/react";
+/* eslint-disable react-hooks/exhaustive-deps */
+
+import { VFC, memo, useEffect, useCallback } from "react";
+import {
+  Wrap,
+  WrapItem,
+  Spinner,
+  Center,
+  useDisclosure
+} from "@chakra-ui/react";
+import { UserCard } from "../oganisms/user/UserCard";
+import { useAllUsers } from "../../hooks/useAllUsers";
+import { UserDetailModal } from "../oganisms/user/UserDetailModal";
 
 export const UserManagement: VFC = memo(() => {
+  const { getUsers, loading, users } = useAllUsers();
+  const { isOpen, onOpen, onClose } = useDisclosure();
+
+  useEffect(() => getUsers(), []);
+
+  const onClickUser = useCallback((id: number) => {
+    console.log(id);
+    onOpen();
+  }, []);
   return (
     <>
-      <Wrap>
-        <WrapItem>
-          <Box w="260px" h="260px" bg="white" borderRadius="10px" shadow="md">
-            <Stack textalign="center">
-              <Image
-                borderRadius="full"
-                boxSize="160px"
-                src="https://source.unsplash.com/random"
+      {loading ? (
+        <Center h="100vh">
+          <Spinner />
+        </Center>
+      ) : (
+        <Wrap p={{ base: 4, md: 10 }}>
+          {users.map((user) => (
+            <WrapItem key={user.id} mx="auto">
+              <UserCard
+                id={user.id}
+                imageUrl="https://source.unsplash.com/randum"
+                userName={user.username}
+                fullName={user.name}
+                onClick={onClickUser}
               />
-            </Stack>
-          </Box>
-        </WrapItem>
-      </Wrap>
+            </WrapItem>
+          ))}
+        </Wrap>
+      )}
+      <UserDetailModal isOpen={isOpen} onClose={onClose} />
     </>
   );
 });
